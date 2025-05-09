@@ -1,0 +1,42 @@
+#!/usr/bin/env goal
+
+hasArg:{|/(x~)'y}
+sep:{y+x+z}
+(nl;sp):sep'"\n" " "
+
+A:1_ARGS
+RELEASE:hasArg["--release"] A
+
+fs:{d["name"]@&~(d:read x)"dir"}
+(libF;srcF):"lib" "src"
+(lib;src):fs'(libF;srcF)
+
+exe:"k12.com"
+
+cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
+
+CXXFLAGS:"-O3 -std=c++23 -Iinc"
+SRC:cpp'src,lib
+
+say'("cxx = clang++"
+     "cxxflags = $CXXFLAGS "+?[RELEASE;"-pedantic -Wextra -Wall";"-g"]
+     rq/rule cpp
+          depfile = $out.d
+          command = $cxx -c -MD -MF $out.d $cxxflags -o $out $in/
+     rq/rule lib
+          command = ar rcs $out $in/
+     rq/rule lnk
+          command = $cxx $cxxflags -o $out $in/
+     rq/rule mkdir
+          command = mkdir -p $out/
+     rq/rule rm
+          command = rm -rf $in/
+     rq/rule exe
+          command = $in/
+     "build clean: rm o"
+     "build run: exe o/$exe"
+     "build o: mkdir"
+     nl/{"build o/"+x+".o: cpp $srcF/$x"}'src
+     nl/{"build o/"+x+".o: cpp $libF/$x"}'lib
+     "build o/$exe: lnk "+sp/{"o/"+x+".o"}'SRC
+     "default o/$exe")
