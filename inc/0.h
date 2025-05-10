@@ -8,17 +8,6 @@ using S = size_t;
 using I = uint32_t;
 using F = double;
 
-#include <mem.h>
-
-/** make a heap allocated buffer of T with x elements */
-template<typename T>
-inline static void *mk(size_t x) {
-	return xalloc(sizeof(T) * x);
-}
-
-template<typename T>
-inline static void *remk(void *buf, size_t x) {
-	return xrealloc(buf, sizeof(T) * x);
-}
+#define IF(x,y) {if(x){y;}}
 
 #endif

@@ -17,7 +17,7 @@ str_t::~str_t() {
 #define CLONE(x) { \
 	i = x.i, cap = x.cap; \
 	buf = (C*)mk<C>(cap); \
-	memcpy(buf, x.buf, sizeof(C) * cap); \
+	memcpy(buf, x.buf, Z(C) * cap); \
 }
 
 str_t::str_t(const str_t& x) CLONE(x);
