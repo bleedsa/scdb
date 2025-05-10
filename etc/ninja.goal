@@ -1,32 +1,45 @@
 #!/usr/bin/env goal
 
+/ utilities
 hasArg:{|/(x~)'y}
-sep:{y+x+z}
-(nl;sp):sep'"\n" " "
+sep:{[s;x;y]x+s+y}    / separate x and y by s
+(nl;sp):sep'"\n" " "  / join by delims
 
+/ cmdline args
 A:1_ARGS
 RELEASE:hasArg["--release"] A
 
+/ get the relevant filenames
 fs:{d["name"]@&~(d:read x)"dir"}
 (libF;srcF):"lib" "src"
 (lib;src):fs'(libF;srcF)
 
+/ target
 exe:"k12.com"
 
+/ find all cpp files in a list
 cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
 
-CXXFLAGS:"-O3 -std=c++23 -Iinc"
+/ all source filenames
 SRC:cpp'src,lib
+/ c++ flags
+CXXFLAGS:"-O3 -std=c++23 -Iinc"
+/ flags for compiling to ape
+APEFLAGS:sp/("-static -fno-pie -no-pie -mno-red-zone -nostdlib -nostdinc"
+             "-Wl,--oformat=binary -Wl,--gc-sections"
+             "-Wl,-z,max-page-size=0x1000 -fuse-ld=bfd -gdwarf-4"
+             "-Wl,-T,ape/ape.lds -Iape")
 
-say'("cxx = clang++"
+/ make build.ninja
+say'("cxx = ape/bin/cosmoc++"
      "cxxflags = $CXXFLAGS "+?[RELEASE;"-pedantic -Wextra -Wall";"-g"]
      rq/rule cpp
           depfile = $out.d
           command = $cxx -c -MD -MF $out.d $cxxflags -o $out $in/
      rq/rule lib
           command = ar rcs $out $in/
-     rq/rule lnk
-          command = $cxx $cxxflags -o $out $in/
+     rq|rule lnk
+          command = $cxx $cxxflags -o $out $in|
      rq/rule mkdir
           command = mkdir -p $out/
      rq/rule rm
