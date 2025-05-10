@@ -32,7 +32,7 @@ void str_t::resize(size_t x) {
 }
 
 void str_t::push(C x) {
-	if (i >= cap) resize(cap * 2);
+	IF(i >= cap, resize(cap * 2));
 	buf[i++] = x;
 }
 

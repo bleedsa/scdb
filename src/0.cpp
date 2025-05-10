@@ -9,6 +9,7 @@ int main(int argc, char **argv) {
 
 	do {
 		putc(' ', stdout);
+		fflush(stdout);
 		ln = Freadln(stdin);
 		auto s = ln.to_cstr();
 		printf("%s\n", s);

@@ -16,6 +16,7 @@ fs:{d["name"]@&~(d:read x)"dir"}
 
 / target
 exe:"k12.com"
+ar: "k12.a"
 
 / find all cpp files in a list
 cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
@@ -31,13 +32,15 @@ APEFLAGS:sp/("-static -fno-pie -no-pie -mno-red-zone -nostdlib -nostdinc"
              "-Wl,-T,ape/ape.lds -Iape")
 
 / make build.ninja
+obj:{"o/"+x+".o"}
+objs:{[d;p]nl/{[p;x]"build "+obj[x]+": cpp $p/$x"}[p]'d}
 say'("cxx = ape/bin/cosmoc++"
      "cxxflags = $CXXFLAGS "+?[RELEASE;"-pedantic -Wextra -Wall";"-g"]
      rq/rule cpp
           depfile = $out.d
           command = $cxx -c -MD -MF $out.d $cxxflags -o $out $in/
      rq/rule lib
-          command = ar rcs $out $in/
+          command = cosmoar rcs $out $in/
      rq|rule lnk
           command = $cxx $cxxflags -o $out $in|
      rq/rule mkdir
@@ -49,7 +52,7 @@ say'("cxx = ape/bin/cosmoc++"
      "build clean: rm o"
      "build run: exe o/$exe"
      "build o: mkdir"
-     nl/{"build o/"+x+".o: cpp $srcF/$x"}'src
-     nl/{"build o/"+x+".o: cpp $libF/$x"}'lib
-     "build o/$exe: lnk "+sp/{"o/"+x+".o"}'SRC
+     objs[src;srcF]; objs[lib;libF]
+     "build o/$ar: lib "+sp/obj'lib
+     "build o/$exe: lnk "+(sp/obj'src)+" o/$ar"
      "default o/$exe")
