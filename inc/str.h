@@ -1,9 +1,11 @@
 #ifndef __K12_INC_STR_H__
 #define __K12_INC_STR_H__
 
+#include <stdlib.h>
 #include <ctype.h>
 
 #include <0.h>
+#include <mem.h>
 
 struct str_t {
 	C *buf;
@@ -22,6 +24,13 @@ struct str_t {
 
 	inline C at(size_t x) {
 		return buf[x];
+	}
+
+	inline char *to_cstr() {
+		char *s = (char*)mk<char>(i + 1);
+		memcpy(s, buf, Z(char) * i);
+		s[i] = 0;
+		return s;
 	}
 };
 
