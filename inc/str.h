@@ -19,7 +19,10 @@ struct str_t {
 	void resize(size_t x);
 	void push(C x);
 	void append(const char *x);
-	char at(size_t x);
+
+	inline C at(size_t x) {
+		return buf[x];
+	}
 };
 
 #endif

@@ -14,6 +14,19 @@ str_t::~str_t() {
 	free(buf);
 }
 
+#define CLONE(x) { \
+	i = x.i, cap = x.cap; \
+	buf = (C*)mk<C>(cap); \
+	memcpy(buf, x.buf, sizeof(C) * cap); \
+}
+
+str_t::str_t(const str_t& x) CLONE(x);
+
+str_t& str_t::operator=(const str_t& x) {
+	CLONE(x);
+	return *this;
+}
+
 void str_t::resize(size_t x) {
 	cap = x, buf = (C*)remk<C>(buf, cap);
 }
