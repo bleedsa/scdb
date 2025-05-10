@@ -3,6 +3,7 @@
 #include <0.h>
 #include <mem.h>
 #include <str.h>
+#include <vec.h>
 #include <p.h>
 
 auto tok_t::to_str() -> str_t {
@@ -44,4 +45,24 @@ auto integer(tape_t *t) -> tok_t {
 		c = t->peek(), t->inc()
 	);
 	return mktok(t, i, TOK_INT);
+}
+
+auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
+	auto r = Vec<tok_t>();
+
+	for (
+		char c = t->peek();
+		c != 0;
+		c = t->peek()
+	) {
+		switch (c) {
+		default:
+			if (isdigit(c)) r.push(integer(t));
+			else goto none;
+		}
+	}
+
+	return Opt<Vec<tok_t>>(r);
+none:
+	return Opt<Vec<tok_t>>();
 }

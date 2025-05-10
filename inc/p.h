@@ -3,6 +3,7 @@
 #include <ctype.h>
 
 #include <0.h>
+#include <vec.h>
 
 enum tokty_t {
 	TOK_INT,
@@ -21,6 +22,10 @@ struct tok_t {
 
 	str_t to_str();
 };
+
+inline static bool operator==(const tok_t& x, const tok_t& y) {
+	return (x.i == y.i) && (x.len == y.len) && (x.ty == y.ty);
+}
 
 /* never copy this */
 struct tape_t {
@@ -43,5 +48,7 @@ struct tape_t {
 };
 
 tok_t integer(tape_t *t);
+
+Opt<Vec<tok_t>> lex(tape_t *t);
 
 #endif

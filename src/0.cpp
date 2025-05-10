@@ -15,11 +15,18 @@ int main(int argc, char **argv) {
 
 		auto s = ln.to_cstr();
 		auto t = tape_t(s);
-		auto tok = integer(&t);
-		auto t_s = tok.to_str().to_cstr();
-		printf("i: %d, len: %d: %s\n", tok.i, tok.len, t_s);
+		auto o = lex(&t);
+		if (o != Opt<Vec<tok_t>>()) {
+			auto toks = o.un();
+			for (S i = 0; i < toks->i; i++) {
+				auto tok = toks->at(i);
+				auto tokS = tok->to_str().to_cstr();
+				printf("%s\n", tokS);
+				free(tokS);
+			}
+		} else printf("'lex\n");
 
-		free(s); free(t_s);
+		free(s);
 	} while (true);
 
 	return 0;

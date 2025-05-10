@@ -18,4 +18,10 @@ inline static T *remk(void *buf, size_t x) {
 	return (T*)xrealloc(buf, Z(T) * x);
 }
 
+/* copy a buffer into another */
+template<typename T>
+inline static void xcpy(T *dst, T *src, S z) {
+	memcpy(dst, src, Z(T) * z);
+}
+
 #endif
