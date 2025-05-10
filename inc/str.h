@@ -7,6 +7,10 @@
 #include <0.h>
 #include <mem.h>
 
+namespace str {
+	inline static S len(C *x) {S i; for (i = 0; *x; x++, i++); return i;}
+}
+
 struct str_t {
 	C *buf;
 	size_t i;
