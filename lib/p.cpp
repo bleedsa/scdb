@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include <0.h>
 #include <mem.h>
@@ -8,7 +9,7 @@
 
 auto tok_t::to_str() -> str_t {
 	auto r = str_t();
-	for (S i = this->i; i < this->i + len; i++) r.push(src[i]);
+	for (S x = i; x < i + len; x++) r.push(src[x]);
 	return r;
 }
 
@@ -21,16 +22,6 @@ tape_t::tape_t(char *x) {
 tape_t::~tape_t() {
 	free(src);
 }
-
-/*
- * toks:
- * {
- * 	src
- * 	i
- * 	len
- * 	ty
- * }
- */
 
 static auto mktok(tape_t *t, S i, tokty_t ty) -> tok_t {
 	return (tok_t){t->src, i, t->i - i, ty};
@@ -61,6 +52,8 @@ auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
 			else goto none;
 		}
 	}
+
+	if (r.i == 0) goto none;
 
 	return Opt<Vec<tok_t>>(r);
 none:

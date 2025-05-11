@@ -32,7 +32,7 @@ struct str_t {
 
 	inline char *to_cstr() {
 		char *s = (char*)mk<char>(i + 1);
-		memcpy(s, buf, Z(char) * i);
+		xcpy<char>(s, (char*)buf, i);
 		s[i] = 0;
 		return s;
 	}

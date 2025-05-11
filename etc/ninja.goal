@@ -15,8 +15,8 @@ fs:{d["name"]@&~(d:read x)"dir"}
 (lib;src):fs'(libF;srcF)
 
 / target
-exe:"k12.com"
-ar: "k12.a"
+name:"SCDB"
+(exe;ar):(name+)'".com" ".a"
 
 / find all cpp files in a list
 cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}

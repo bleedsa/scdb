@@ -40,7 +40,7 @@ struct Vec {
 
 	void push(T x) {
 		if (i >= cap) resize(cap * 2);
-		buf[i] = x;
+		buf[i++] = x;
 	}
 
 	inline T *at(S x) {

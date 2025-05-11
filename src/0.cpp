@@ -11,23 +11,34 @@ int main(int argc, char **argv) {
 	do {
 		putc(' ', stdout);
 		fflush(stdout);
-		ln = Freadln(stdin);
+
+		char c;
+		auto ln = str_t();
+		for (c = fgetc(stdin); c != '\n'; c = fgetc(stdin)) {
+			if (c == EOF) goto ret;
+			ln.push(c);
+		}
 
 		auto s = ln.to_cstr();
 		auto t = tape_t(s);
 		auto o = lex(&t);
+
 		if (o != Opt<Vec<tok_t>>()) {
 			auto toks = o.un();
 			for (S i = 0; i < toks->i; i++) {
 				auto tok = toks->at(i);
-				auto tokS = tok->to_str().to_cstr();
-				printf("%s\n", tokS);
-				free(tokS);
+				auto tokS = tok->to_str();
+				auto tokC = tokS.to_cstr();
+				printf("%s ", tokC);
+				free(tokC);
 			}
+			putc('\n', stdout);
+			fflush(stdout);
 		} else printf("'lex\n");
 
 		free(s);
 	} while (true);
 
+ret:
 	return 0;
 }
