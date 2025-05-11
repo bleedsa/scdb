@@ -6,11 +6,13 @@
 
 int main(int argc, char **argv) {
 	str_t ln;
-	printf("k12 repl * (c) skylar bleed 2025 * ? for help\n\n");
+	printf("stone cold database repl | (c) skylar bleed 2025\n\n");
 
 	do {
 		char c;
 		auto ln = str_t();
+
+		PUTC(' ');
 		for (c = getchar(); c != '\n'; c = getchar()) {
 			if (c == EOF) goto ret;
 			ln.push(c);
@@ -29,7 +31,7 @@ int main(int argc, char **argv) {
 				printf("%s ", tokC);
 				free(tokC);
 			}
-			printf("\n");
+			PUTC('\n');
 		} else printf("'lex\n");
 
 		free(s);
