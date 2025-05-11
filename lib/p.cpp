@@ -27,15 +27,20 @@ static auto mktok(tape_t *t, S i, tokty_t ty) -> tok_t {
 	return (tok_t){t->src, i, t->i - i, ty};
 }
 
+#define isname(c) (isalpha(c)||(c=='_'))
+
 auto integer(tape_t *t) -> tok_t {
 	char c;
 	S i = t->i;
-	for (
-		c = t->peek();
-		c != 0 && isdigit(c);
-		c = t->peek(), t->inc()
-	);
+	for (c = t->peek(); c != 0 && isdigit(c); c = t->peek(), t->inc());
 	return mktok(t, i, TOK_INT);
+}
+
+auto name(tape_t *t) -> tok_t {
+	char c;
+	S i = t->i;
+	for (c = t->peek(); c != 0 && isname(c); c = t->peek(), t->inc());
+	return mktok(t, i, TOK_NAM);
 }
 
 auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
@@ -49,6 +54,7 @@ auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
 		switch (c) {
 		default:
 			if (isdigit(c)) r.push(integer(t));
+			else if (isalpha(c)) r.push(name(t));
 			else goto none;
 		}
 	}
