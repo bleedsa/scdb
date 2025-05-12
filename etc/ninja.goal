@@ -9,17 +9,17 @@ sep:{[s;x;y]x+s+y}    / separate x and y by s
 A:1_ARGS
 RELEASE:hasArg["--release"] A
 
+/ find all cpp files in a list
+cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
+
 / get the relevant filenames
 fs:{d["name"]@&~(d:read x)"dir"}
 (libF;srcF):"lib" "src"
-(lib;src):fs'(libF;srcF)
+(lib;src):cpp'fs'(libF;srcF)
 
 / target
 name:"SCDB"
 (exe;ar):(name+)'".com" ".a"
-
-/ find all cpp files in a list
-cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
 
 / all source filenames
 SRC:cpp'src,lib
