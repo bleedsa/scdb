@@ -27,7 +27,7 @@ str_t& str_t::operator=(const str_t& x) {
 	return *this;
 }
 
-void str_t::resize(size_t x) {
+void str_t::resize(S x) {
 	cap = x, buf = (C*)remk<C>(buf, cap);
 }
 
@@ -37,5 +37,10 @@ void str_t::push(C x) {
 }
 
 void str_t::append(const char *x) {
-	for (size_t i = 0; i < strlen(x); i++) push(x[i]);
+	for (S i = 0; i < strlen(x); i++) push(x[i]);
+}
+
+bool str_t::has(C x) {
+	for (S j = 0; j < i; j++) if (buf[j] == x) return true;
+	return false;
 }

@@ -69,6 +69,9 @@ auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 	str_t err;
 	auto r = Vec<tok_t>();
 
+	static auto VERBS = str_t();
+	VERBS.append("~!@#$%^&*_+-=|\\:?><,./'");
+
 	for (char c = t->peek(); c != 0; c = t->peek()) {
 		Opt<tok_t> o;
 		auto i = t->i;
@@ -100,6 +103,7 @@ auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 		default:
 			if (isdigit(c)) r.push(integer(t));
 			else if (isalpha(c)) r.push(name(t));
+			else if (VERBS.has((C)c)) r.push(single(t, TOK_VRB));
 			else {
 				err.append("unrecognized char '");
 				err.push(c);

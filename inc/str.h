@@ -25,6 +25,7 @@ struct str_t {
 	void resize(size_t x);
 	void push(C x);
 	void append(const char *x);
+	bool has(C x);
 
 	inline C at(size_t x) {
 		return buf[x];
