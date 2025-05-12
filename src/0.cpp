@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 
 		auto s = ln.to_cstr();
 		auto t = tape_t(s);
-		auto o = lex(&t);
+		auto res = lex(&t);
 
-		if (o != Opt<Vec<tok_t>>()) {
-			auto toks = o.un();
+		if (res.is()) {
+			auto toks = res.un();
 			for (S i = 0; i < toks->len(); i++) {
 				auto tok = toks->at(i);
 				auto tokS = tok->to_str();
@@ -31,7 +31,12 @@ int main(int argc, char **argv) {
 				free(tokC);
 			}
 			PUTC('\n');
-		} else printf("'lex\n");
+		} else {
+			auto err = res.err();
+			auto errC = err->to_cstr();
+			printf("'lex:\n %s\n", errC);
+			free(errC);
+		}
 
 		free(s);
 	} while (true);

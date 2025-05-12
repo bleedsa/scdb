@@ -3,6 +3,31 @@
 
 #include <0.h>
 
+template<typename X, typename Y>
+struct Ethr {
+	union {
+		X x;
+		Y y;
+	};
+	bool e;
+
+	inline Ethr(X x) : x{x}, e{true}  {}
+	inline Ethr(Y y) : y{y}, e{false} {}
+	inline ~Ethr() {}
+
+	inline auto is() -> bool {
+		return e;
+	}
+
+	inline auto un() -> X* {
+		return &x;
+	}
+
+	inline auto err() -> Y* {
+		return &y;
+	}
+};
+
 template<typename T>
 struct Opt {
 	T x;

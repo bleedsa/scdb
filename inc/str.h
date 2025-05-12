@@ -38,4 +38,7 @@ struct str_t {
 	}
 };
 
+template<typename T>
+using Res = Ethr<T, str_t>;
+
 #endif

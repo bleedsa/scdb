@@ -49,6 +49,6 @@ struct tape_t {
 
 tok_t integer(tape_t *t);
 
-Opt<Vec<tok_t>> lex(tape_t *t);
+Res<Vec<tok_t>> lex(tape_t *t);
 
 #endif

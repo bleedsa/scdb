@@ -57,32 +57,33 @@ none:
 	return Opt<tok_t>();
 }
 
-auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
+#define ERR(m){err.append(m); goto fail;}
+
+auto lex(tape_t *t) -> Res<Vec<tok_t>> {
+	str_t err;
 	auto r = Vec<tok_t>();
 
-	for (
-		char c = t->peek();
-		c != 0;
-		c = t->peek()
-	) {
+	for (char c = t->peek(); c != 0; c = t->peek()) {
 		Opt<tok_t> o;
+
 		switch (c) {
 		case '"':
 			t->inc();
 			o = string(t);
 			if (o.is()) r.push(*o.un());
-			else goto none;
+			else ERR("unclosed str");
 			break;
+
 		default:
 			if (isdigit(c)) r.push(integer(t));
 			else if (isalpha(c)) r.push(name(t));
-			else goto none;
+			else ERR("unrecognized char");
 		}
 	}
 
-	if (r.i == 0) goto none;
+	if (r.i == 0) ERR("no tokens found");
 
-	return Opt<Vec<tok_t>>(r);
-none:
-	return Opt<Vec<tok_t>>();
+	return Res<Vec<tok_t>>(r);
+fail:
+	return Res<Vec<tok_t>>(err);
 }
