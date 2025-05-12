@@ -9,6 +9,11 @@ str_t::str_t() {
 	i = 0, cap = 8, buf = (C*)mk<C>(cap);
 }
 
+str_t::str_t(const char *x) {
+	*this = str_t();
+	append(x);
+}
+
 str_t::~str_t() {
 	i = 0, cap = 0;
 	free(buf);

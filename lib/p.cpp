@@ -64,13 +64,11 @@ auto static single(tape_t *t, tokty_t ty) -> tok_t {
 }
 
 #define ERR(m){err.append(m); goto fail;}
+static auto VERBS = str_t("~!@#$%^&*_+-=|\\:?><,./'");
 
 auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 	str_t err;
 	auto r = Vec<tok_t>();
-
-	static auto VERBS = str_t();
-	VERBS.append("~!@#$%^&*_+-=|\\:?><,./'");
 
 	for (char c = t->peek(); c != 0; c = t->peek()) {
 		Opt<tok_t> o;

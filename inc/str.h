@@ -17,6 +17,7 @@ struct str_t {
 	size_t cap;
 
 	str_t();
+	str_t(const char *x);
 	~str_t();
 
 	str_t(const str_t& x);
