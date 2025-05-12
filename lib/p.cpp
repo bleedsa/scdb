@@ -36,11 +36,25 @@ auto integer(tape_t *t) -> tok_t {
 	return mktok(t, i, TOK_INT);
 }
 
-auto name(tape_t *t) -> tok_t {
+auto static name(tape_t *t) -> tok_t {
 	char c;
 	S i = t->i;
 	for (c = t->peek(); c != 0 && isname(c); c = t->peek(), t->inc());
 	return mktok(t, i, TOK_NAM);
+}
+
+auto static string(tape_t *t) -> Opt<tok_t> {
+	char c;
+	S i = t->i;
+	for (c = t->peek(); c != 0 && c != '"'; c = t->peek()) t->inc();
+
+	auto tok = mktok(t, i, TOK_STR);
+	if (c == '"') t->inc();
+	else goto none;
+
+	return Opt<tok_t>(tok);
+none:
+	return Opt<tok_t>();
 }
 
 auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
@@ -51,7 +65,14 @@ auto lex(tape_t *t) -> Opt<Vec<tok_t>> {
 		c != 0;
 		c = t->peek()
 	) {
+		Opt<tok_t> o;
 		switch (c) {
+		case '"':
+			t->inc();
+			o = string(t);
+			if (o.is()) r.push(*o.un());
+			else goto none;
+			break;
 		default:
 			if (isdigit(c)) r.push(integer(t));
 			else if (isalpha(c)) r.push(name(t));

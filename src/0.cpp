@@ -5,7 +5,6 @@
 #include <p.h>
 
 int main(int argc, char **argv) {
-	str_t ln;
 	printf("stone cold database repl | (c) skylar bleed 2025\n\n");
 
 	do {
@@ -24,7 +23,7 @@ int main(int argc, char **argv) {
 
 		if (o != Opt<Vec<tok_t>>()) {
 			auto toks = o.un();
-			for (S i = 0; i < toks->i; i++) {
+			for (S i = 0; i < toks->len(); i++) {
 				auto tok = toks->at(i);
 				auto tokS = tok->to_str();
 				auto tokC = tokS.to_cstr();

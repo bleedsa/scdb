@@ -30,6 +30,10 @@ struct Opt {
 	inline auto un() -> T* {
 		return &x;
 	}
+
+	inline auto is() -> bool {
+		return e;
+	}
 };
 
 template<typename T>
