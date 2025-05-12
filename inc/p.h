@@ -12,6 +12,8 @@ enum tokty_t {
 	TOK_OPN,
 	TOK_CLS,
 	TOK_NAM,
+	TOK_VRB,
+	TOK_SEP,
 };
 
 struct tok_t {
@@ -46,8 +48,6 @@ struct tape_t {
 		i++, col++;
 	}
 };
-
-tok_t integer(tape_t *t);
 
 Res<Vec<tok_t>> lex(tape_t *t);
 

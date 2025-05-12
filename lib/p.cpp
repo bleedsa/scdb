@@ -29,17 +29,17 @@ static auto mktok(tape_t *t, S i, tokty_t ty) -> tok_t {
 
 #define isname(c) (isalpha(c)||(c=='_'))
 
-auto integer(tape_t *t) -> tok_t {
+auto static integer(tape_t *t) -> tok_t {
 	char c;
 	S i = t->i;
-	for (c = t->peek(); c != 0 && isdigit(c); c = t->peek(), t->inc());
+	for (c = t->peek(); c != 0 && isdigit(c); c = t->peek()) t->inc();
 	return mktok(t, i, TOK_INT);
 }
 
 auto static name(tape_t *t) -> tok_t {
 	char c;
 	S i = t->i;
-	for (c = t->peek(); c != 0 && isname(c); c = t->peek(), t->inc());
+	for (c = t->peek(); c != 0 && isname(c); c = t->peek()) t->inc();
 	return mktok(t, i, TOK_NAM);
 }
 
@@ -57,6 +57,12 @@ none:
 	return Opt<tok_t>();
 }
 
+auto static single(tape_t *t, tokty_t ty) -> tok_t {
+	S i = t->i;
+	t->inc();
+	return mktok(t, i, ty);
+}
+
 #define ERR(m){err.append(m); goto fail;}
 
 auto lex(tape_t *t) -> Res<Vec<tok_t>> {
@@ -65,8 +71,25 @@ auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 
 	for (char c = t->peek(); c != 0; c = t->peek()) {
 		Opt<tok_t> o;
+		auto i = t->i;
 
 		switch (c) {
+		case '(':
+		case '[':
+		case '{':
+			r.push(single(t, TOK_OPN));
+			break;
+
+		case ')':
+		case ']':
+		case '}':
+			r.push(single(t, TOK_CLS));
+			break;
+
+		case ';':
+			r.push(single(t, TOK_SEP));
+			break;
+
 		case '"':
 			t->inc();
 			o = string(t);
@@ -77,7 +100,12 @@ auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 		default:
 			if (isdigit(c)) r.push(integer(t));
 			else if (isalpha(c)) r.push(name(t));
-			else ERR("unrecognized char");
+			else {
+				err.append("unrecognized char '");
+				err.push(c);
+				err.push('\'');
+				goto fail;
+			}
 		}
 	}
 

@@ -19,7 +19,7 @@ struct Vec {
 
 	#define CLONEVEC(x) { \
 		i = x.i, cap = x.cap; \
-		buf = (T*)mk<T>(cap); \
+		buf = mk<T>(cap); \
 		xcpy(buf, x.buf, cap); \
 	}
 
