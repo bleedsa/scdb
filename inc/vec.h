@@ -44,15 +44,16 @@ struct A {
 		buf[i] = x;
 	}
 
-	template<typename U>
-	auto each(U (^f)(T*)) -> A<U> {
+	template<typename U, typename F>
+	auto each(F f) -> A<U> {
 		auto z = len();
 		auto r = A<U>(z);
 		for (S i = 0; i < z; i++) r.buf[i] = f(&buf[i]);
 		return r;
 	}
 
-	auto for_each(void (^f)(T*)) -> void {
+	template<typename F>
+	auto for_each(F f) -> void {
 		for (S i = 0; i < cap; i++) f(&buf[i]);
 	}
 };
@@ -114,6 +115,13 @@ inline bool operator==(const Vec<T>& x, const Vec<T>& y) {
 	} else {
 		return false;
 	}
+}
+
+template<typename T>
+inline auto max(A<T> *x) -> T {
+	T r = 0;
+	x->for_each([&](T *x){r = *x > r ? *x : r;});
+	return r;
 }
 
 #endif
