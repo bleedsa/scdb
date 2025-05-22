@@ -111,7 +111,7 @@ auto lex(tape_t *t) -> Res<Vec<tok_t>> {
 		}
 	}
 
-	if (r.i == 0) ERR("no tokens found");
+	if (r.len() == 0) ERR("no tokens found");
 
 	return Res<Vec<tok_t>>(r);
 fail:

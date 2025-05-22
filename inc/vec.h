@@ -1,6 +1,62 @@
 #ifndef __K12_INC_VEC_H__
 #define __K12_INC_VEC_H__
 
+#include <stdlib.h>
+
+#include <0.h>
+#include <mem.h>
+
+/* a vector with a static length */
+template<typename T>
+struct A {
+	T *buf;
+	S cap;
+
+	A(S len) : cap{len} {
+		buf = mk<T>(cap);
+	}
+
+	~A() {
+		free(buf);
+	}
+
+	#define CLONEA(x) { \
+		cap = x.cap, buf = mk<T>(cap); \
+		xcpy<T>(buf, x.buf, cap); \
+	}
+
+	inline A(const A<T>& x) CLONEA(x);
+
+	inline A<T>& operator=(const A<T>& x) {
+		CLONEA(x);
+		return *this;
+	}
+
+	inline auto len() -> S {
+		return cap;
+	}
+
+	inline auto at(S i) -> T* {
+		return &buf[i];
+	}
+
+	inline auto set(S i, T x) -> void {
+		buf[i] = x;
+	}
+
+	template<typename U>
+	auto each(U (^f)(T*)) -> A<U> {
+		auto z = len();
+		auto r = A<U>(z);
+		for (S i = 0; i < z; i++) r.buf[i] = f(&buf[i]);
+		return r;
+	}
+
+	auto for_each(void (^f)(T*)) -> void {
+		for (S i = 0; i < cap; i++) f(&buf[i]);
+	}
+};
+
 template<typename T>
 struct Vec {
 	T *buf;

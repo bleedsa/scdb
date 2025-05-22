@@ -20,29 +20,31 @@ fs:{d["name"]@&~(d:read x)"dir"}
 / target
 name:"SCDB"
 (exe;ar):(name+)'".com" ".a"
+dae:name+"d.com"
 
 / all source filenames
 SRC:cpp'src,lib
+WARNINGS:sp/("-pedantic -Wextra -Wall -Wno-c99-extensions -Wno-unused-variable"
+             "-Wno-unused-parameter -Wno-empty-body")
 / c++ flags
-CXXFLAGS:"-O3 -std=c++23 -Iinc"
-/ flags for compiling to ape
-APEFLAGS:sp/("-static -fno-pie -no-pie -mno-red-zone -nostdlib -nostdinc"
-             "-Wl,--oformat=binary -Wl,--gc-sections"
-             "-Wl,-z,max-page-size=0x1000 -fuse-ld=bfd -gdwarf-4"
-             "-Wl,-T,ape/ape.lds -Iape")
+CXXFLAGS:"-mclang -O2 -std=c++26 -Iinc"
+/ release flags
+RELFLAGS:sp/"-O3"
 
 / make build.ninja
 obj:{"o/"+x+".o"}
-objs:{[d;p]nl/{[p;x]"build "+obj[x]+": cpp $p/$x"}[p]'d}
+objs:{sp/obj'x}
+bldObjs:{[d;p]nl/{[p;x]"build "+obj[x]+": cpp $p/$x"}[p]'d}
 say'("cxx = ape/bin/cosmoc++"
-     "cxxflags = $CXXFLAGS "+?[RELEASE;"-pedantic -Wextra -Wall";"-g"]
+     "lnk = ape/bin/apelink"
+     "cxxflags = $CXXFLAGS $WARNINGS "+?[RELEASE;RELFLAGS;"-g"]
      rq/rule cpp
           depfile = $out.d
-          command = $cxx -c -MD -MF $out.d $cxxflags -o $out $in/
+          command = $cxx -c -MD -MF $out.d $cxxflags -fblocks -o $out $in/
      rq/rule lib
           command = cosmoar rcs $out $in/
      rq|rule lnk
-          command = $cxx $cxxflags -o $out $in|
+          command = $cxx -o $out $in|
      rq/rule mkdir
           command = mkdir -p $out/
      rq/rule rm
@@ -52,7 +54,8 @@ say'("cxx = ape/bin/cosmoc++"
      "build clean: rm o"
      "build run: exe o/$exe"
      "build o: mkdir"
-     objs[src;srcF]; objs[lib;libF]
-     "build o/$ar: lib "+sp/obj'lib
-     "build o/$exe: lnk "+(sp/obj'src)+" o/$ar"
-     "default o/$exe")
+     bldObjs[src;srcF]; bldObjs[lib;libF]
+     "build o/$ar: lib "+objs lib
+     "build o/$exe: lnk o/0.cpp.o o/$ar"
+     "build o/$dae: lnk o/D.cpp.o o/$ar"
+     "default o/$exe o/$dae")
