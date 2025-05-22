@@ -3,3 +3,4 @@
 /build.ninja
 /.ninja_log
 /*.swp
+vgcore.*
