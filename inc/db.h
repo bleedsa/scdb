@@ -57,11 +57,25 @@ namespace db {
 		NS();
 		~NS();
 
-		void mk(str_t n, A<C> t);
+		void mk(str_t n, A<val::ty> t);
+
+		inline S len() {
+			return names.len();
+		}
 	};
 
 	struct Db {
-	
+		Vec<str_t> names;
+		Vec<NS> NSs;
+
+		Db();
+		~Db();
+
+		void mkNS(str_t n);
+
+		inline S len() {
+			return names.len();
+		}
 	};
 
 	/* get the size of types */

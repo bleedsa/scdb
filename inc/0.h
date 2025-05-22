@@ -4,9 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define Z(x) (sizeof(x))
-#define IF(x,y) {if(x){y;}}
-#define PUTC(x) {putc(x, stdout); fflush(stdout);}
+#define Z(x)      (sizeof(x))
+#define IF(x,y)   {if(x){y;}}
+#define PUTC(x)   {putc(x, stdout); fflush(stdout);}
+#define CASE(c,x) case c:{x;break;}
 
 /** chars */
 using C = uint8_t;

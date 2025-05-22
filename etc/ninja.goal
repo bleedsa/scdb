@@ -1,7 +1,7 @@
 #!/usr/bin/env goal
 
 / utilities
-hasArg:{|/(x~)'y}
+hasArg:{?[y;|/(x~)'y;0]}
 sep:{[s;x;y]x+s+y}    / separate x and y by s
 (nl;sp):sep'"\n" " "  / join by delims
 
@@ -9,6 +9,7 @@ sep:{[s;x;y]x+s+y}    / separate x and y by s
 A:1_ARGS
 RELEASE:hasArg["--release"] A
 NATIVE:hasArg["--native"] A
+say "# NATIVE: $NATIVE"
 
 / find all cpp files in a list
 cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}

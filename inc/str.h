@@ -23,10 +23,17 @@ struct str_t {
 	void resize(size_t x);
 	void push(C x);
 	void append(const char *x);
+	void append(str_t *x);
+	void append(C *x);
 	bool has(C x);
+	void back();
 
 	inline C at(size_t x) {
 		return buf[x];
+	}
+
+	inline S len() {
+		return i;
 	}
 
 	inline char *to_cstr() {

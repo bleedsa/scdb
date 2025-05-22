@@ -45,9 +45,22 @@ void str_t::append(const char *x) {
 	for (S i = 0; i < strlen(x); i++) push(x[i]);
 }
 
+void str_t::append(str_t *x) {
+	for (S i = 0; i < x->len(); i++) push(x->at(i));
+}
+
+void str_t::append(C *x) {
+	for (S i = 0; i < str::len(x); i++) push(x[i]);
+}
+
 bool str_t::has(C x) {
 	for (S j = 0; j < i; j++) if (buf[j] == x) return true;
 	return false;
+}
+
+void str_t::back() {
+	buf[len() - 1] = 0;
+	i--;
 }
 
 auto str::to_AC(const char *x) -> A<C> {

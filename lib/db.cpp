@@ -6,7 +6,7 @@
 /* delete all items in a matrix column */
 template<typename T>
 inline static auto mat_del_col(db::Mat *mat, S col) -> void {
-	for (S r = 0; r < mat->H; r++) delete *mat->nth<T>(r, col);
+	for (S r = 0; r < mat->H; r++) delete *mat->idx<T>(r, col);
 }
 
 db::Mat::Mat(A<db::val::ty> tys) : tys{tys} {
@@ -34,8 +34,29 @@ db::Mat::~Mat() {
 
 auto db::Mat::mkrow() -> void {
 	H++;
-	printf("size: %zu\n", size * W * H);
 	ptr = (C*)realloc(ptr, size * W * H);
+}
+
+db::NS::NS() {
+	names = Vec<str_t>(), mats = Vec<Mat>();
+}
+
+db::NS::~NS() {}
+
+auto db::NS::mk(str_t n, A<db::val::ty> t) -> void {
+	names.push(n);
+	mats.push(db::Mat(t));
+}
+
+db::Db::Db() {
+	names = Vec<str_t>(), NSs = Vec<NS>();
+}
+
+db::Db::~Db() {}
+
+auto db::Db::mkNS(str_t n) -> void {
+	names.push(n);
+	NSs.push(db::NS());
 }
 
 auto db::chrZ(A<db::val::ty> *x) -> A<S> {
@@ -53,3 +74,4 @@ auto db::chrZ(A<db::val::ty> *x) -> A<S> {
 		}
 	});
 }
+
