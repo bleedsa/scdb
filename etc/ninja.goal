@@ -8,6 +8,7 @@ sep:{[s;x;y]x+s+y}    / separate x and y by s
 / cmdline args
 A:1_ARGS
 RELEASE:hasArg["--release"] A
+NATIVE:hasArg["--native"] A
 
 / find all cpp files in a list
 cpp:{x@&{".cpp"~+/|4#|("c"$)'"c"$x}'x}
@@ -27,7 +28,8 @@ SRC:cpp'src,lib
 WARNINGS:sp/("-pedantic -Wextra -Wall -Wno-c99-extensions -Wno-unused-variable"
              "-Wno-unused-parameter -Wno-empty-body")
 / c++ flags
-CXXFLAGS:"-mclang -O2 -std=c++26 -Iinc"
+CXXFLAGS:sp/("-O2 -std=c++26 -Iinc"
+             ?[~NATIVE;"-mclang";""])
 / release flags
 RELFLAGS:sp/"-O3"
 
@@ -35,8 +37,7 @@ RELFLAGS:sp/"-O3"
 obj:{"o/"+x+".o"}
 objs:{sp/obj'x}
 bldObjs:{[d;p]nl/{[p;x]"build "+obj[x]+": cpp $p/$x"}[p]'d}
-say'("cxx = ape/bin/cosmoc++"
-     "lnk = ape/bin/apelink"
+say'("cxx = "+?[NATIVE;"clang++";"ape/bin/cosmoc++"]
      "cxxflags = $CXXFLAGS $WARNINGS "+?[RELEASE;RELFLAGS;"-g"]
      rq/rule cpp
           depfile = $out.d

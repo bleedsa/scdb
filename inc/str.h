@@ -6,10 +6,7 @@
 
 #include <0.h>
 #include <mem.h>
-
-namespace str {
-	inline static S len(C *x) {S i; for (i = 0; *x; x++, i++); return i;}
-}
+#include <vec.h>
 
 struct str_t {
 	C *buf;
@@ -42,5 +39,11 @@ struct str_t {
 
 template<typename T>
 using Res = Ethr<T, str_t>;
+
+namespace str {
+	inline static S len(C *x) {S i; for (i = 0; *x; x++, i++); return i;}
+	A<C> to_AC(const char *x);
+	C *from_AC(A<C> *x);
+}
 
 #endif

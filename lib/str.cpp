@@ -49,3 +49,20 @@ bool str_t::has(C x) {
 	for (S j = 0; j < i; j++) if (buf[j] == x) return true;
 	return false;
 }
+
+auto str::to_AC(const char *x) -> A<C> {
+	auto len = strlen(x);
+	auto r = A<C>(len);
+	for (S i = 0; i < len; i++) r.set(i, x[i]);
+	return r;
+}
+
+#include <stdio.h>
+
+auto str::from_AC(A<C> *x) -> C* {
+	auto L = x->len();
+	auto r = mk<C>(L + 1);
+	memcpy(r, x->buf, Z(C) * L);
+	r[L] = 0;
+	return r;
+}

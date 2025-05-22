@@ -3,29 +3,53 @@
 #include <vec.h>
 #include <db.h>
 
-db::Mat::Mat(A<size_t> s) {
-	W = s.len(), H = 0, size = max<size_t>(&s);
-	ptr = (uint8_t*)malloc(size);
+/* delete all items in a matrix column */
+template<typename T>
+inline static auto mat_del_col(db::Mat *mat, S col) -> void {
+	for (S r = 0; r < mat->H; r++) delete *mat->nth<T>(r, col);
+}
+
+db::Mat::Mat(A<db::val::ty> tys) : tys{tys} {
+	auto s = chrZ(&tys);
+	W = s.len(), H = 0, size = max<S>(&s), ptr = (C*)malloc(size);
 }
 
 db::Mat::~Mat() {
+	S i = 0;
+	/* delete all the columns if we need */
+	tys.for_each([&](db::val::ty *ty){
+		switch (*ty) {
+		case val::AI: mat_del_col<A<I>*>(this, i); break;
+		case val::AC: mat_del_col<A<C>*>(this, i); break;
+		case val::AF: mat_del_col<A<F>*>(this, i); break;
+		case val::AS: mat_del_col<A<S>*>(this, i); break;
+		default:
+		}
+		i++;
+	});
 	free(ptr);
 }
 
+#include <stdio.h>
+
 auto db::Mat::mkrow() -> void {
 	H++;
-	ptr = (uint8_t*)realloc(ptr, size * W * H);
+	printf("size: %zu\n", size * W * H);
+	ptr = (C*)realloc(ptr, size * W * H);
 }
 
-auto db::chrZ(A<db::val::ty> *x) -> A<size_t> {
+auto db::chrZ(A<db::val::ty> *x) -> A<S> {
 	return x->each<unsigned long>([](db::val::ty *x) {
 		switch (*x) {
-		case db::val::I: return sizeof(int32_t);
-		case db::val::S: return sizeof(size_t);
-		case db::val::C: return sizeof(uint8_t);
+		case db::val::I: return sizeof(I);
+		case db::val::F: return sizeof(F);
+		case db::val::S: return sizeof(S);
+		case db::val::C: return sizeof(C);
 
-		default:
-			return (unsigned long)0;
+		case db::val::AI: return sizeof(A<I>*);
+		case db::val::AC: return sizeof(A<C>*);
+		case db::val::AF: return sizeof(A<F>*);
+		case db::val::AS: return sizeof(A<S>*);
 		}
 	});
 }

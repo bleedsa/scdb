@@ -5,25 +5,39 @@
 #include <vec.h>
 
 namespace db {
+	namespace val {
+		enum ty {
+			I = 'i',
+			C = 'c',
+			F = 'f',
+			S = 's',
+			AI = 'I',
+			AC = 'C',
+			AF = 'F',
+			AS = 'S',
+		};
+	};
+
 	/* a ragged matrix */
 	struct Mat {
-		size_t W;
-		size_t H;
-		size_t size;
-		uint8_t *ptr;
+		A<val::ty> tys;
+		S W;
+		S H;
+		S size;
+		C *ptr;
 
-		Mat(A<size_t> s);
+		Mat(A<val::ty> s);
 		~Mat();
 
 		void mkrow();
 
 		template<typename T>
-		inline T *nth(size_t r, size_t n) {
+		inline T *nth(S r, S n) {
 			return (T*)(ptr + (size * (r * W + n)));
 		}
 
 		template<typename T>
-		inline void set(size_t r, size_t n, T x) {
+		inline void set(S r, S n, T x) {
 			*(T*)(ptr + (size * (r * W + n))) = x;
 		}
 	};
@@ -43,17 +57,8 @@ namespace db {
 	
 	};
 
-	namespace val {
-		enum ty {
-			I = 'i',
-			C = 'c',
-			F = 'f',
-			S = 's',
-		};
-	};
-
 	/* get the size of types */
-	A<size_t> chrZ(A<val::ty> *x);
+	A<S> chrZ(A<val::ty> *x);
 }
 
 #endif

@@ -9,8 +9,8 @@
 /* a vector with a static length */
 template<typename T>
 struct A {
-	T *buf;
 	S cap;
+	T *buf;
 
 	A(S len) : cap{len} {
 		buf = mk<T>(cap);
