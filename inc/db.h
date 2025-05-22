@@ -20,10 +20,15 @@ namespace db {
 
 	/* a ragged matrix */
 	struct Mat {
+		/* the types of each column */
 		A<val::ty> tys;
+		/* matrix width */
 		S W;
+		/* matrix height */
 		S H;
+		/* the size of each aligned object */
 		S size;
+		/* a long block of memory that we index */
 		C *ptr;
 
 		Mat(A<val::ty> s);
@@ -31,11 +36,13 @@ namespace db {
 
 		void mkrow();
 
+		/* index row r column n */
 		template<typename T>
-		inline T *nth(S r, S n) {
+		inline T *idx(S r, S n) {
 			return (T*)(ptr + (size * (r * W + n)));
 		}
 
+		/* set row r column n to x */
 		template<typename T>
 		inline void set(S r, S n, T x) {
 			*(T*)(ptr + (size * (r * W + n))) = x;
