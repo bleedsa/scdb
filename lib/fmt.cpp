@@ -78,6 +78,12 @@ auto fmt::AS(A<S> *x) -> str_t {
 auto fmt::Mat(S pad, db::Mat *x) -> str_t {
 	auto ret = str_t();
 
+	for (S i = 0; i < x->tys.len(); i++) {
+		ret.push((C)*x->tys.at(i));
+		if (i < x->tys.len() - 1) ret.push('|');
+	}
+	ret.push('\n');
+
 	for (S r = 0; r < x->H; r++) {
 		for (S i = 0; i < pad; i++) ret.push(' ');
 		ret.append(" ; ");
@@ -109,7 +115,7 @@ auto fmt::NS(db::NS *x) -> str_t {
 	for (S i = 0; i < x->len(); i++) {
 		auto s = x->names.at(i);
 		auto len = s->len();
-		r.append(s); r.append(":{\n");
+		r.append(s); r.append(":{ ");
 		auto m = fmt::Mat(len, x->mats.at(i));
 		r.append(&m);
 		for (S j = 0; j < len; j++) r.push(' ');
