@@ -30,8 +30,7 @@ int main(int argc, char **argv) {
 	auto FOO = TEST->fnd(&foo);
 	for (S i = 0; i < 3; i++) {
 		FOO->mkrow();
-		FOO->set<A<I>*>(i, 0, new A<I>(2));
-		**FOO->idx<A<I>*>(i, 0) = ai;
+		FOO->setA<I>(i, 0, ai);
 		*FOO->idx<F>(i, 1) = i + 0.1;
 	}
 

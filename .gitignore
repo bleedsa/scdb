@@ -2,5 +2,5 @@
 /o
 /build.ninja
 /.ninja_log
-/*.swp
+*.swp
 vgcore.*
