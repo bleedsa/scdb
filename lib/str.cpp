@@ -63,6 +63,12 @@ void str_t::back() {
 	i--;
 }
 
+auto str_t::eq(str_t *x) -> bool {
+	if (x->len() != len()) return false;
+	for (S i = 0; i < len(); i++) if (x->at(i) != at(i)) return false;
+	return true;
+}
+
 auto str::to_AC(const char *x) -> A<C> {
 	auto len = strlen(x);
 	auto r = A<C>(len);

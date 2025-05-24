@@ -14,7 +14,7 @@ using C = uint8_t;
 /** sizes */
 using S = size_t;
 /** ints */
-using I = uint32_t;
+using I = int32_t;
 /** floats */
 using F = double;
 

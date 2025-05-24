@@ -27,6 +27,7 @@ struct str_t {
 	void append(C *x);
 	bool has(C x);
 	void back();
+	bool eq(str_t *x);
 
 	inline C at(size_t x) {
 		return buf[x];

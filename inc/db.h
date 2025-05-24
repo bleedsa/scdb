@@ -34,11 +34,20 @@ namespace db {
 		Mat(A<val::ty> s);
 		~Mat();
 
+		Mat(const Mat& x);
+		const Mat& operator=(const Mat& x);
+
 		void mkrow();
 
 		/* index row r column n */
 		template<typename T>
 		inline T *idx(S r, S n) {
+			return (T*)(ptr + (size * (r * W + n)));
+		}
+
+		/* const variant for copy constructors */
+		template<typename T>
+		inline T *idx_(S r, S n) const {
 			return (T*)(ptr + (size * (r * W + n)));
 		}
 
@@ -58,6 +67,7 @@ namespace db {
 		~NS();
 
 		void mk(str_t n, A<val::ty> t);
+		Mat *fnd(str_t *n);
 
 		inline S len() {
 			return names.len();
@@ -72,6 +82,7 @@ namespace db {
 		~Db();
 
 		void mkNS(str_t n);
+		NS *fnd(str_t *n);
 
 		inline S len() {
 			return names.len();

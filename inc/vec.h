@@ -22,7 +22,7 @@ struct A {
 
 	#define CLONEA(x) { \
 		cap = x.cap, buf = mk<T>(cap); \
-		xcpy<T>(buf, x.buf, cap); \
+		for (S i = 0; i < cap; i++) buf[i] = x.buf[i]; \
 	}
 
 	inline A(const A<T>& x) CLONEA(x);
@@ -77,7 +77,7 @@ struct Vec {
 	#define CLONEVEC(x) { \
 		i = x.i, cap = x.cap; \
 		buf = mk<T>(cap); \
-		xcpy(buf, x.buf, cap); \
+		for (S q = 0; q < i; q++) buf[q] = x.buf[q]; \
 	}
 
 	inline Vec(const Vec<T>& x) CLONEVEC(x);
