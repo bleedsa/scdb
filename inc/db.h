@@ -60,7 +60,7 @@ namespace db {
 		/* set row r column c to A x */
 		template<typename T>
 		inline void setA(S r, S c, A<T> x) {
-			set<A<T>*>(r, c, new A<T>(x.len()));
+			set<A<T>*>(r, c, new A<T>(0));
 			**idx<A<T>*>(r, c) = x;
 		}
 	};

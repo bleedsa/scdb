@@ -15,6 +15,7 @@ namespace fmt {
 	str_t AS(A<S> *x);
 
 	str_t Mat(db::Mat *x);
+	str_t Mat(S pad, db::Mat *x);
 	str_t NS(db::NS *x);
 	str_t Db(db::Db *x);
 };
