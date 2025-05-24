@@ -17,21 +17,33 @@ int main(int argc, char **argv) {
 	tys.set(0, db::val::AI);
 	tys.set(1, db::val::F);
 
+	auto chr = A<db::val::ty>(2);
+	chr.set(0, db::val::I);
+	chr.set(1, db::val::AC);
+
 	/* allocate some strings */
-	str_t test = str_t("test"), foo = str_t("foo"), bar = str_t("bar");
+	str_t test = str_t("test"), fooS = str_t("foo"), barS = str_t("bar");
 	/* make a new database and make a namespace */
 	auto D = db::Db();
 	D.mkNS(test);
 
 	auto TEST = D.fnd(&test);
-	TEST->mk(foo, tys);
-	TEST->mk(bar, tys);
+	TEST->mk(fooS, tys);
+	TEST->mk(barS, chr);
 
-	auto FOO = TEST->fnd(&foo);
+	auto foo = TEST->fnd(&fooS);
 	for (S i = 0; i < 3; i++) {
-		FOO->mkrow();
-		FOO->setA<I>(i, 0, ai);
-		*FOO->idx<F>(i, 1) = i + 0.1;
+		foo->mkrow();
+		foo->setA<I>(i, 0, ai);
+		foo->set<F>(i, 1, i + (i / 1));
+	}
+
+	auto bar = TEST->fnd(&barS);
+	const char *strs[] = {"foo", "bar", "baz"};
+	for (S i = 0; i < 3; i++) {
+		bar->mkrow();
+		bar->set<I>(i, 0, i);
+		bar->setA<C>(i, 1, str::to_AC(strs[i]));
 	}
 
 	auto s = fmt::Db(&D);
